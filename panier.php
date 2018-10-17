@@ -4,6 +4,7 @@ require_once('includes/header.php');
 require_once('includes/sidebar.php');
 
 require_once('includes/fonctions_panier.php');
+require_once('includes/paypal.php');
 $erreur=false;
 
 $action=(isset($_POST['action'])?$_POST['action']:(isset($_GET['action'])?$_GET['action']:null));
@@ -85,6 +86,36 @@ if($erreur){
 	echo '<br><p style="color:Red;">Oops,panier vide !</p>';
 
 }else{
+	$shipping=CalculFraisPorts();
+	$totaltva=montantGlobalTVA();
+	$total=montantGlobal();
+	$paypal=new Paypal();
+
+	$params=array(
+		'RETURNURL' =>'http://127.0.0.1/site e-commerce/process.php',
+		'CANCELURL' =>'http://127.0.0.1/site e-commerce/cancel.php',
+		'PAYMENTREQUEST_0_AMT'=>$totaltva,
+		'PAYMENTREQUEST_0_CURRENCYCODE'=>'EUR',
+		'PAYMENTREQUEST_0_SHIPPINGAMT'=>$shipping,
+		'PAYMENTREQUEST_0_ITEMANT'=>$totaltva
+
+		
+
+	);
+	$response=$paypal->request('SetExpressCheckout',$params);
+	if($response){
+		$paypal='https//sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token='.$response['TOKEN'].'';
+
+	}else{
+		var_dump($paypal->errors);
+		die('Erreur');
+
+	}
+
+
+	
+
+
     for($i=0;$i<$nbProduits;$i++){
     	?>
     	<tr>
@@ -100,9 +131,11 @@ if($erreur){
     ?>
     	<tr>
     		<td colspan="2"><br/>
-    			<p>Total :<?php echo montantGlobal(). "francs"; ?></p><br/>
-    			<p>Total avec TVA  :<?php echo montantGlobalTVA(). "francs"; ?></p><br/>
-    			<p>Calcul des frais de port : </p>
+    			<p>Total :<?php echo $total. "francs"; ?></p><br/>
+    			<p>Total avec TVA  :<?php echo $totaltva. "francs"; ?></p><br/>
+    			<p>Calcul des frais de port :<?php echo $shipping."francs";?></p>
+    			
+    			<a href="<?php echo $paypal;?>">Payer la commande</a>
 
     		</td>
     		</td>

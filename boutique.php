@@ -43,7 +43,7 @@
 			<h5><?php echo $s->description; ?></h5>
 			<h4><?php echo $s->price; ?>Francs</h4>
 			 
-			<?php if($s->stock!=0){?><a href="panier.php?>action=ajout&amp;1=<?php echo $s->title; ?>&amp;q=1<?php echo $s->stock; ?>&amp;p=<?php echo$s->price; ?>">Ajouter au panier</a><?php }else{
+			<?php if($s->stock!=0){?><a href="panier.php?>action=ajout&amp;l=<?php echo $s->title; ?>&amp;q=1<?php echo $s->stock; ?>&amp;p=<?php echo$s->price; ?>">Ajouter au panier</a><?php }else{
 				echo'<h5 style="color:red;"Stock epuise </h5>'; }?>
 			
 			<br/><br/>

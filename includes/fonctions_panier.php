@@ -153,6 +153,7 @@ function isVerrouille(){
 
           }
 		}
+		
 
 		if($error){
 			die('<br/><p style="color:red;">Supprimer l\'article et recommencez avec une quantité inferieure.</p>');
